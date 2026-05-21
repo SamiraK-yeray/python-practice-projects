@@ -41,6 +41,11 @@ Technologies utilisées
 - Matplotlib — graphiques
 - Tkcalendar — sélecteur de date
 
+
+📷 Aperçu
+
+![python-practice-projects](gestionnaire-depenses.png)
+
 Auteur
 
 SamiraK-yeray
