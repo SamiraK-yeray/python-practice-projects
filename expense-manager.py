@@ -2,6 +2,7 @@ from customtkinter import *
 import sqlite3
 import pandas as pd
 import matplotlib.pyplot as plt
+from customtkinter import CTkScrollableFrame
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkcalendar import DateEntry
 
@@ -106,6 +107,9 @@ def afficher_analyses():
         label_nb.configure(text="Nombre : 0")
         return
 
+    df["montant"] = pd.to_numeric(df["montant"], errors="coerce")  # ← ajoute cette ligne
+    df = df.dropna(subset=["montant"])  # ← supprime les valeurs invalides
+
     label_total.configure(text=f"Total : {df['montant'].sum():.2f} €")
     label_max.configure(text=f"Maximum : {df['montant'].max():.2f} €")
     label_min.configure(text=f"Minimum : {df['montant'].min():.2f} €")
@@ -139,11 +143,12 @@ def afficher_graphique(df):
     plt.close(fig)
 
 
+
 frame_gauche = CTkFrame(window, width=350, fg_color="#1e1e1e", corner_radius=0)
 frame_gauche.grid(row=0, column=0, sticky="nsew", padx=(10, 5), pady=10)
 frame_gauche.grid_propagate(False)
 
-frame_droite = CTkFrame(window, fg_color="#1e1e1e", corner_radius=0)
+frame_droite = CTkScrollableFrame(window, fg_color="#1e1e1e", corner_radius=0)
 frame_droite.grid(row=0, column=1, sticky="nsew", padx=(5, 10), pady=10)
 
 window.grid_columnconfigure(0, weight=0)
@@ -169,7 +174,7 @@ champ_date.pack(padx=20, pady=(3, 10))
 CTkButton(frame_gauche, text="Ajouter la dépense", height=40,
           fg_color="#4e9af1", hover_color="#2c7de0", command=ajouter).pack(padx=20, pady=(10, 5), fill="x")
 
-CTkLabel(frame_gauche, text="ID à supprimer", anchor="w").pack(fill="x", padx=20, pady=(15, 0))
+CTkLabel(frame_gauche, text="ID à supprimer/modifier", anchor="w").pack(fill="x", padx=20, pady=(15, 0))
 champ_sup = CTkEntry(frame_gauche, width=300, height=38, placeholder_text="ex: 1")
 champ_sup.pack(padx=20, pady=(3, 5))
 
@@ -209,6 +214,8 @@ CTkLabel(frame_droite, text="Graphique par catégorie",
 
 frame_graph = CTkFrame(frame_droite, fg_color="#2b2b2b", corner_radius=10)
 frame_graph.pack(padx=15, pady=(0, 15), fill="both", expand=True)
+
+
 
 
 afficher_depenses()
